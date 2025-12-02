@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="text-image.css">
+    <title>Document</title>
+</head>
+<body>
+    <div class="app">
+        <header class="topbar">
+            <h1>AI Text-to-image</h1>
+            <div class="top-actions">
+                <button id="setupKeyBtn" title="Set API Key">API Key</button>
+            </div>
+        </header>
+        <main class="layout">
+            <section class="controls">
+                <label class="block">
+                    <span class="label">Prompt</span>
+                    <textarea id="prompt" rows="4" placeholder="A cat astronaut riding a bike on the moon"></textarea>
+                </label>
+                <div class="row">
+                    <label>
+                        <span class="label">Size</span>
+                        <select id="size">
+                            <option value="512x512">512 x 512</option>
+                            <option value="768x768">768 x 768</option>
+                            <option value="1024x1024" selected>1024 x 1024</option>
+                        </select>
+                    </label>
+                    <label>
+                        <span class="label">Count</span>
+                        <input type="number" id="count" min="1" max="4" value="1">
+                    </label>
+                </div>
+                <button id="generateBtn" class="primary">Generate</button>
+                <div id="status" class="status"></div>
+            </section>
+            <section class="gallery" id="gallery">
+                
+            </section>
+        </main>
+    </div>
+    <script src="text-image.js"></script>
+</body>
+</html>
