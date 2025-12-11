@@ -40,3 +40,91 @@ h1{
     gap: 16px;
     padding: 16px;
 }
+@media (max-width:800px) {
+    .layout {
+        grid-template-columns: 1fr;
+    }
+}
+.controls{
+    background: #020617;
+    border-radius: 12px;
+    border: 1px solid #1f2937;
+    padding: 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+.block {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+.row {
+    display: flex;
+    gap: 10px;
+}
+.row label {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+.label {
+    font-size: 13px;
+    color: #9ca3af;
+}
+textarea, select, input[type="number"] {
+    width: 100%;
+    border-radius: 8px;
+    border: 1px solid #374151;
+    background: #020617;
+    color: #e5e7eb;
+    padding: 8px 10px;
+    font-size: 14px;
+    outline: none;
+}
+textarea:focus, select:focus, input[type="number"]:focus {
+    border-color: #6366f1;
+}
+.primary {
+    margin-top: 4px;
+    background: #4f46e5;
+    border: none;
+    border-radius: 999px;
+    padding: 8px 14px;
+    color: white;
+    font-weight: 500;
+    cursor: pointer;
+}
+.primary:disabled{
+    opacity: 0.6;
+    cursor: default;
+}
+.status {
+    min-height: 18px;
+    font-size: 13px;
+    color: #9ca3af;
+}
+.gallery{
+    border-radius: 12px;
+    border: 1px solid #1f2937;
+    padding: 12px;
+    background: #020617;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 10px;
+    align-content: flex-start;
+}
+.card{
+    border-radius: 10px;
+    overflow: hidden;
+    background: #0b1120;
+    border: 1px solid #1f2937;
+    display: flex;
+    flex-direction: column;
+}
+.card img{
+    width: 100%;
+    display: block;
+    background: #020617;
+}
