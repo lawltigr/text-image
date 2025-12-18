@@ -77,3 +77,31 @@ function addImageCard(url, promptText) {
     card.appendChild(footer);
     galleryEl.prepend(card);
 }
+
+generateBtn.addEventListener('click', async () => {
+    const promptText = promptEl.ariaValueMax.trim();
+    const size = sizeEl.value;
+    const n = Math.max(1, Math.min(4, parseInt(countEl.value, 10) || 1));
+    if (!promptText){
+        alert('Please enter a prompt.');
+        return;
+    }
+    setStatus('');
+    setLoading(true);
+    try {
+        const urls = await callImageApi(promptText, size, n);
+        if (!urls.length) {
+            setStatus('No images returned.');
+            return;
+        }
+        urls.forEach(url => addImageCard(url, promptText));
+        setStatus(`Got ${urls.length} image(s),`);
+    }
+    catch (err) {
+        console.error(err);
+        setStatus('Error: ' + (err.message || 'request failed'));
+    }
+    finally {
+        setLoading(false);
+    }
+})
