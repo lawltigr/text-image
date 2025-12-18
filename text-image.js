@@ -6,7 +6,7 @@ const generateBtn = document.getElementById('generateBtn');
 const galleryEl = document.getElementById('gallery');
 const setupKeyBtn = document.getElementById('setupKeyBtn');
 
-const API_KEY_KEY = 'mini_img_api_key';
+const API_KEY_KEY = 'mini_img_api_key_hf';
 
 function getApiKey() {
     return localStorage.getItem(API_KEY_KEY) || '';
@@ -16,7 +16,7 @@ function getApiKey() {
 }
 setupKeyBtn.addEventListener('click', () => {
     const current = getApiKey();
-    const k = prompt('Enter OpenAI API key (sk-...):', current);
+    const k = prompt('Enter Hugging Face API key (sk-...):', current);
     if (k != null) {
         setApiKey(k);
     }
@@ -35,8 +35,8 @@ async function callImageApi(promptText, size, n) {
     const res = await fetch('https://api.openai.com/v1/images/generations', {
         method: 'POST',
         headers: {
-            'Authorization': 'Bearer' + apiKey,
-            'Content-Type': 'applications/json'
+            'Authorization': 'Bearer ' + apiKey,
+            'Content-Type': 'application/json'
         },
         body: JSON.stringify(body)
     })
@@ -79,7 +79,7 @@ function addImageCard(url, promptText) {
 }
 
 generateBtn.addEventListener('click', async () => {
-    const promptText = promptEl.ariaValueMax.trim();
+    const promptText = promptEl.value.trim();
     const size = sizeEl.value;
     const n = Math.max(1, Math.min(4, parseInt(countEl.value, 10) || 1));
     if (!promptText){
@@ -89,13 +89,13 @@ generateBtn.addEventListener('click', async () => {
     setStatus('');
     setLoading(true);
     try {
-        const urls = await callImageApi(promptText, size, n);
+        const imageUrl = await callImageApiHF(promptText);
         if (!urls.length) {
             setStatus('No images returned.');
             return;
         }
         urls.forEach(url => addImageCard(url, promptText));
-        setStatus(`Got ${urls.length} image(s),`);
+        setStatus(`Got ${urls.length} image(s).`);
     }
     catch (err) {
         console.error(err);
@@ -105,3 +105,32 @@ generateBtn.addEventListener('click', async () => {
         setLoading(false);
     }
 })
+
+async function callImageApiHF(promptText) {
+    const apiKey = getApiKey();
+    if (!apiKey) {
+        throw new Error('No Hugging Face API key');
+    }
+
+    const res = await fetch(
+        'https://api-inference.huggingface.co/models/stabilityai/stable-diffusion-2-1',
+        {
+            method: 'POST',
+            headers: {
+                'Authorization': 'Bearer ' + apiKey,
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                inputs: promptText
+            })
+        }
+    );
+
+    if (!res.ok) {
+        const text = await res.text().catch(() => '');
+        throw new Error(`HF error ${res.status}: ${text}`);
+    }
+    const blob = await res.blob();
+    const imageUrl = URL.createObjectURL(blob);
+    return imageUrl;
+}
