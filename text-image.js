@@ -80,8 +80,6 @@ function addImageCard(url, promptText) {
 
 generateBtn.addEventListener('click', async () => {
     const promptText = promptEl.value.trim();
-    const size = sizeEl.value;
-    const n = Math.max(1, Math.min(4, parseInt(countEl.value, 10) || 1));
     if (!promptText){
         alert('Please enter a prompt.');
         return;
@@ -90,11 +88,7 @@ generateBtn.addEventListener('click', async () => {
     setLoading(true);
     try {
         const imageUrl = await callImageApiHF(promptText);
-        if (!urls.length) {
-            setStatus('No images returned.');
-            return;
-        }
-        urls.forEach(url => addImageCard(url, promptText));
+        addImageCard(imageUrl, promptText);
         setStatus(`Got ${urls.length} image(s).`);
     }
     catch (err) {
