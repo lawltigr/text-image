@@ -84,20 +84,32 @@ generateBtn.addEventListener('click', async () => {
         alert('Please enter a prompt.');
         return;
     }
-    setStatus('');
-    setLoading(true);
-    try {
-        const imageUrl = await callImageApiHF(promptText);
-        addImageCard(imageUrl, promptText);
-        setStatus(`Got ${urls.length} image(s).`);
-    }
-    catch (err) {
-        console.error(err);
-        setStatus('Error: ' + (err.message || 'request failed'));
-    }
-    finally {
-        setLoading(false);
-    }
+    const res = await fetch('https://ai-image-proxy.vasilisatikhonova110.workers.dev',{
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json'},
+        body: JSON.stringify({
+            prompt,
+            size: '1024x1024'
+        })
+    });
+    const data = await res.json();
+    const img = `data:image/png;base64,${data.data[0].b64_json}`;
+    galleryEl.appendChild(img);
+
+    // setStatus('');
+    // setLoading(true);
+    // try {
+    //     const imageUrl = await callImageApiHF(promptText);
+    //     addImageCard(imageUrl, promptText);
+    //     setStatus(`Got ${urls.length} image(s).`);
+    // }
+    // catch (err) {
+    //     console.error(err);
+    //     setStatus('Error: ' + (err.message || 'request failed'));
+    // }
+    // finally {
+    //     setLoading(false);
+    // }
 })
 
 async function callImageApiHF(promptText) {
@@ -128,5 +140,8 @@ async function callImageApiHF(promptText) {
     const imageUrl = URL.createObjectURL(blob);
     return imageUrl;
 }
+
+
+
 
 // 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
