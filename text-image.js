@@ -128,3 +128,5 @@ async function callImageApiHF(promptText) {
     const imageUrl = URL.createObjectURL(blob);
     return imageUrl;
 }
+
+// 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
