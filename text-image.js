@@ -80,22 +80,40 @@ function addImageCard(url, promptText) {
 
 generateBtn.addEventListener('click', async () => {
     const promptText = promptEl.value.trim();
-    if (!promptText){
-        alert('Please enter a prompt.');
-        return;
+    if (!promptText) {
+      alert('Please enter a prompt.');
+      return;
     }
-    const res = await fetch('https://ai-image-proxy.vasilisatikhonova110.workers.dev',{
+  
+    try {
+      const res = await fetch('https://ai-image-proxy.vasilisatikhonova110.workers.dev', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json'},
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-            prompt,
-            size: '1024x1024'
+          prompt: promptText,
+          size: '1024x1024'
         })
-    });
-    const data = await res.json();
-    const img = `data:image/png;base64,${data.data[0].b64_json}`;
-    galleryEl.appendChild(img);
-
+      });
+  
+      const data = await res.json();
+  
+      if (!data.data || !data.data.length) {
+        console.error('Bad response:', data);
+        alert(data.error?.message || 'No image returned');
+        return;
+      }
+  
+      const img = document.createElement('img');
+      img.src = `data:image/png;base64,${data.data[0].b64_json}`;
+      img.style.maxWidth = '100%';
+      galleryEl.appendChild(img);
+  
+    } catch (err) {
+      console.error(err);
+      alert('Request failed');
+    }
+  });
+  
     // setStatus('');
     // setLoading(true);
     // try {
@@ -110,7 +128,6 @@ generateBtn.addEventListener('click', async () => {
     // finally {
     //     setLoading(false);
     // }
-})
 
 async function callImageApiHF(promptText) {
     const apiKey = getApiKey();
