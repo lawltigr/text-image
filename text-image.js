@@ -102,18 +102,29 @@ generateBtn.addEventListener('click', async () => {
         alert(data.error?.message || 'No image returned');
         return;
       }
-  
+      const b64 = data.data[0].b64_json;
+      const card = document.createElement('div');
+      card.className = 'card';
+
       const img = document.createElement('img');
-      img.src = `data:image/png;base64,${data.data[0].b64_json}`;
+      img.src = `data:image/png;base64,${b64}`;
       img.style.maxWidth = '100%';
-      galleryEl.appendChild(img);
+       const downloadBtn = document.createElement('button');
+       downloadBtn.textContent = 'Download';
+       downloadBtn.onclick = () => {
+        downloadBase64Image(b64, `ai-image-${Date.now()}.png`);
+       };
+
+      card.appendChild(img);
+      card.appendChild(downloadBtn);
+      galleryEl.appendChild(card);
   
     } catch (err) {
       console.error(err);
       alert('Request failed');
     }
   });
-  
+
     // setStatus('');
     // setLoading(true);
     // try {
@@ -158,6 +169,14 @@ async function callImageApiHF(promptText) {
     return imageUrl;
 }
 
+function downloadBase64Image(b64, filename = 'image.png'){
+    const link = document.createElement('a');
+    link.href = `data:image/png;base64,${b64}`;
+    link.download = filename;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+}
 
 
 
